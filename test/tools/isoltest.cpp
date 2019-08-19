@@ -45,7 +45,7 @@ using namespace dev::solidity::test;
 using namespace dev::formatting;
 using namespace std;
 namespace po = boost::program_options;
-namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 using TestCreator = TestCase::TestCaseCreator;
 using TestOptions = dev::test::IsolTestOptions;

@@ -44,7 +44,7 @@ void TestCase::printUpdatedSettings(ostream& _stream, const string& _linePrefix,
 		_stream << _linePrefix << "// " << setting.first << ": " << setting.second << endl;
 }
 
-bool TestCase::isTestFilename(boost::filesystem::path const& _filename)
+bool TestCase::isTestFilename(std::filesystem::path const& _filename)
 {
 	string extension = _filename.extension().string();
 	return (extension == ".sol" || extension == ".yul") &&

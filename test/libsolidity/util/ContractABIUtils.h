@@ -66,8 +66,9 @@ public:
 	);
 
 	/// Returns a list of parameters corresponding to the encoding of
-	/// returned values in case of a failure.
-	static ParameterList failureParameters();
+	/// returned values in case of a failure. Creates an additional parameter
+	/// for an error message if _hasMessage is true.
+	static ParameterList failureParameters(const bool _hasMessage = false);
 
 	/// Returns _count parameters with their type set to ABIType::UnsignedDec
 	/// and their size set to 32 bytes.

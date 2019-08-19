@@ -127,7 +127,12 @@ string TestFunctionCall::format(
 				boost::optional<ParameterList> abiParams;
 
 				if (isFailure && !output.empty())
-					abiParams = boost::make_optional(ContractABIUtils::failureParameters());
+				{
+					/// If output is longer than 68 bytes (signature + tail + length),
+					/// create one additional parameter for the message.
+					bool hasMessage = output.size() > 68;
+					abiParams = boost::make_optional(ContractABIUtils::failureParameters(hasMessage));
+				}
 				else
 					abiParams = ContractABIUtils::parametersFromJsonOutputs(
 						_errorReporter,
@@ -191,9 +196,13 @@ string TestFunctionCall::formatBytesParameters(
 
 	if (_failure)
 	{
+		/// If bytes is longer than 68 bytes (signature + tail + length),
+		/// create one additional parameter for the message.
+		bool hasMessage = _bytes.size() > 68;
+
 		os << BytesUtils::formatBytesRange(
 			_bytes,
-			ContractABIUtils::failureParameters(),
+			ContractABIUtils::failureParameters(hasMessage),
 			_highlight
 		);
 

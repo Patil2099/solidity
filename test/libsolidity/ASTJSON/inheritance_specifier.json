@@ -66,8 +66,8 @@
 			"id" : 4,
 			"linearizedBaseContracts" : 
 			[
-				4,
-				1
+				1,
+				4
 			],
 			"name" : "C2",
 			"nodeType" : "ContractDefinition",

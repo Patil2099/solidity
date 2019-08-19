@@ -42,7 +42,9 @@ public:
 	{
 		m_numLiveVars = 0;
 		m_numVarsPerScope.push(m_numLiveVars);
-		m_numFunctionSets = 0;
+		m_numFunctionsNoRet = 0;
+		m_numFunctionsSingleRet = 0;
+		m_numFunctionsMultiRet = 0;
 		m_inForBodyScope = false;
 		m_inForInitScope = false;
 		m_numNestedForLoops = 0;
@@ -60,15 +62,12 @@ private:
 	void visit(Expression const&);
 	void visit(VarDecl const&);
 	void visit(EmptyVarDecl const&);
-	void visit(MultiVarDecl const&);
 	void visit(TypedVarDecl const&);
 	void visit(UnaryOp const&);
 	void visit(AssignmentStatement const&);
-	void visit(MultiAssignment const&);
 	void visit(IfStmt const&);
 	void visit(StoreFunc const&);
 	void visit(Statement const&);
-	void visit(FunctionDefinition const&);
 	void visit(ForStmt const&);
 	void visit(BoundedForStmt const&);
 	void visit(CaseStmt const&);
@@ -82,16 +81,10 @@ private:
 	void visit(RetRevStmt const&);
 	void visit(SelfDestructStmt const&);
 	void visit(TerminatingStmt const&);
-	void visit(FunctionCallNoReturnVal const&);
-	void visit(FunctionCallSingleReturnVal const&);
 	void visit(FunctionCall const&);
-	void visit(FunctionDefinitionNoReturnVal const&);
-	void visit(FunctionDefinitionSingleReturnVal const&);
-	void visit(FunctionDefinitionMultiReturnVal const&);
+	void visit(FunctionDef const&);
 	void visit(Program const&);
-	template <class T>
-	void visit(google::protobuf::RepeatedPtrField<T> const& _repeated_field);
-	void registerFunction(FunctionDefinition const&);
+	void registerFunction(FunctionDef const&);
 
 	std::string createHex(std::string const& _hexBytes) const;
 	std::string createAlphaNum(std::string const& _strBytes) const;
@@ -109,6 +102,7 @@ private:
 	template<class T>
 	void createFunctionDefAndCall(T const&, unsigned, unsigned, NumFunctionReturns);
 	std::string functionTypeToString(NumFunctionReturns _type);
+	std::string functionTypeToIndex(NumFunctionReturns _type, bool _increment = false);
 
 	template <class T>
 	void registerFunction(T const& _x, NumFunctionReturns _type, unsigned _numOutputParams = 0)
@@ -135,9 +129,10 @@ private:
 	unsigned m_numLiveVars;
 	// Set that is used for deduplicating switch case literals
 	std::stack<std::set<dev::u256>> m_switchLiteralSetPerScope;
-	// Total number of function sets. A function set contains one function of each type defined by
-	// NumFunctionReturns
-	unsigned m_numFunctionSets;
+	// Total number of functions.
+	unsigned m_numFunctionsNoRet;
+	unsigned m_numFunctionsSingleRet;
+	unsigned m_numFunctionsMultiRet;
 	// Look-up table per function type that holds the number of input (output) function parameters
 	std::vector<unsigned> m_functionVecNoReturnValue;
 	std::vector<unsigned> m_functionVecSingleReturnValue;
